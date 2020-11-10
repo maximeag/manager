@@ -233,7 +233,6 @@
   "ip_order_abonnement": "Abonament miesięczny:",
   "ip_order_free": "ZA DARMO",
   "ip_order_bloc": "Blok",
-  "ip_order_renew_PCC": "Adresy IP będą odnawiane automatycznie z Twoją infrastrukturą Dedicated Cloud.",
   "ip_order_resume": "Podsumowanie zamówienia",
   "ip_order_price_HT": "Cena netto:",
   "ip_order_price_TTC": "Cena brutto:",
@@ -242,5 +241,7 @@
   "ip_order_finish_success": "Zamówienie nr <a href='{{t0}}' target='_blank'>{{t1}}</a> jest przetwarzane.",
   "ip_order_finish_error": "Wystąpił błąd podczas zamawiania dodatkowych adresów IP.",
   "ip_order_free_activation_fee": "W przypadku serwerów, dla których abonament za dodatkowe adresy IP jest darmowy, koszty aktywacji nie będą doliczane w trakcie odnawiania serwera. ",
-  "ip_order_resume_short": "Blok /{{ blockSize }}: {{ price }}"
+  "ip_order_resume_short": "Blok /{{ blockSize }}: {{ price }}",
+  "ip_order_renew_EPCC": "Adresy IP będą odnawiane automatycznie z Twoją infrastrukturą Dedicated Cloud.",
+  "ip_order_renew_MBM": "Adresy IP będą odnawiane automatycznie wraz z Twoją infrastrukturą Managed Bare Metal."
 }
