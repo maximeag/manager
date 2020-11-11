@@ -1,68 +1,56 @@
-import isArray from 'lodash/isArray';
-import isEmpty from 'lodash/isEmpty';
+import get from 'lodash/get';
 import isString from 'lodash/isString';
 
 angular.module('App').controller(
   'configurationCtrl',
   class ConfigurationCtrl {
-    constructor($q, $translate, constants, coreConfig, DedicatedCloud, User) {
-      this.$q = $q;
+    constructor($scope, $translate, constants, User) {
+      this.$scope = $scope;
       this.$translate = $translate;
       this.constants = constants;
-      this.coreConfig = coreConfig;
-      this.DedicatedCloud = DedicatedCloud;
       this.User = User;
     }
 
     $onInit() {
       this.currentLanguage = this.$translate.use();
       this.fallbackLanguage = this.$translate.fallbackLanguage();
+      this.sectionNames = ['sd'];
       this.urlToAllGuides = this.getURLFromSection(
         this.constants.TOP_GUIDES.all,
       );
 
-      return this.buildingGuideURLs().then(() => this.gettingHelpCenterURLs());
+      this.$scope.$on('switchUniverse', (event, universe) => {
+        this.sectionNames = ['sd'];
+        if (universe === 'hpc') {
+          this.sectionNames = ['pcc'];
+        }
+        this.buildingGuideURLs();
+      });
+
+      return this.gettingHelpCenterURLs().then(() => this.buildingGuideURLs());
     }
 
     getURLFromSection(section) {
       if (isString(section)) {
         return section;
       }
-      return section[this.currentLanguage] || section[this.fallbackLanguage];
+      return (
+        get(section, this.currentLanguage) ||
+        get(section, this.fallbackLanguage)
+      );
     }
 
     buildingGuideURLs() {
-      return this.fetchingGuideSectionNames().then((sectionNames) => {
-        this.sections = sectionNames.reduce(
-          (sections, sectionName) => ({
-            ...sections,
-            [sectionName]: {
-              name: sectionName,
-              links: this.getURLFromSection(
-                this.constants.TOP_GUIDES[sectionName],
-              ),
-            },
-          }),
-          {},
-        );
-      });
-    }
-
-    fetchingGuideSectionNames() {
-      const sectionNames = ['sd'];
-
-      if (this.coreConfig.getRegion() === 'US') {
-        return this.DedicatedCloud.getDescription().then((ids) => {
-          if (isArray(ids) && !isEmpty(ids)) {
-            return sectionNames;
-          }
-
-          return [];
-        });
-      }
-
-      sectionNames.push('pcc');
-      return this.$q.when(sectionNames);
+      this.sections = this.sectionNames.reduce(
+        (sections, name) => ({
+          ...sections,
+          [name]: {
+            name,
+            links: this.getURLFromSection(get(this.constants.TOP_GUIDES, name)),
+          },
+        }),
+        {},
+      );
     }
 
     gettingHelpCenterURLs() {
